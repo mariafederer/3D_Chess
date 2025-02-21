@@ -1,0 +1,14 @@
+# Ignorowanie folderów generowanych przez Visual Studio
+.vs/
+.vscode/
+.idea/
+
+# Ignorowanie folderów generowanych przez Unity
+[Ll]ibrary/
+[Tt]emp/
+Obj/
+Build/
+Builds/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Ll]ogs/
