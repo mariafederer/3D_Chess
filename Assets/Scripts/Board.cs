@@ -7,6 +7,7 @@ public class Board : MonoBehaviour
     public Material[] PieceMaterials;
     public int Width = 8;
     public int Height = 8;
+    public LogicManager logicManager;
 
     void Start()
     {
