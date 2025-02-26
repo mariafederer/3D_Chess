@@ -11,16 +11,21 @@ public class Board : MonoBehaviour
 
     void Start()
     {
+        logicManager = Object.FindFirstObjectByType<LogicManager>();
         GenerateBoard();
         PlaceStartingPosition();
     }
 
     public void GenerateBoard()
     {
-        for (int i = 0; i < Width; i++) {
-            for (int j = 0; j < Height; j++) {
-                GameObject square = Instantiate(Square, new Vector3(i, 0, j), Quaternion.identity);
-                square.transform.parent = this.transform;
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                GameObject squareObject = Instantiate(Square, new Vector3(i, 0, j), Quaternion.identity);
+                squareObject.transform.parent = this.transform;
+                Square square = squareObject.GetComponent<Square>();
+                logicManager.squares[i, j] = square;
                 Renderer renderer = square.GetComponent<Renderer>();
                 if ((i + j) % 2 == 0)
                 {

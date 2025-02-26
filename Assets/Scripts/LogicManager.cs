@@ -4,6 +4,7 @@ using UnityEngine;
 public class LogicManager : MonoBehaviour
 {
     public Piece[,] boardMap = new Piece[8,8];
+    public Square[,] squares = new Square[8, 8];
     public bool[,] whiteCheckMap = new bool[8,8];
     public bool[,] blackCheckMap = new bool[8, 8];
     public bool isWhiteTurn;
@@ -56,6 +57,15 @@ public class LogicManager : MonoBehaviour
                 blackCheckMap[x, y] = false;
             }
         }
+    }
+
+    public Square GetSquareAtPosition(Vector2 position)
+    {
+        if (position.x < 0 || position.x >= squares.GetLength(0) || position.y < 0 || position.y >= squares.GetLength(1))
+        {
+            return null;
+        }
+        return squares[(int)position.x, (int)position.y];
     }
 
 }

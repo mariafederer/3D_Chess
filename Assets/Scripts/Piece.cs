@@ -37,6 +37,8 @@ public abstract class Piece : MonoBehaviour
 
     public void Move(Vector2 newPosition)
     {
+        Vector2 currentCoordinates = GetCoordinates();
+        logicManager.boardMap[(int)currentCoordinates.x, (int)currentCoordinates.y] = null;
         HasMoved = 1;
         Take(newPosition);
         transform.position = new Vector3(newPosition.x, transform.position.y, newPosition.y);

@@ -14,9 +14,10 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             SelectPiece();
+            MovePiece();
         }
 
     }
@@ -68,11 +69,19 @@ public class InputManager : MonoBehaviour
     void HighlightLegalMoves(List<Vector2> legalMoves)
     {
         UnhighlightLegalMoves();
-
         foreach (Vector2 move in legalMoves)
         {
-            Square square = GetSquareAtPosition(move);
-            square.Highlight(Color.cyan);
+            Square square = logicManager.GetSquareAtPosition(move);
+            Piece pieceOnSquare = logicManager.boardMap[(int)move.x, (int)move.y];
+            if (pieceOnSquare != null)
+            {
+                square.Highlight(Color.red);
+            }
+            else
+            {
+                square.Highlight(Color.cyan);
+            }
+
             highlightedSquares.Add(square);
             Debug.Log("Highlight square at: " + move);
         }
@@ -87,13 +96,19 @@ public class InputManager : MonoBehaviour
         highlightedSquares.Clear();
     }
 
-    Square GetSquareAtPosition(Vector2 position)
+    void MovePiece()
     {
-        Ray ray = new Ray(new Vector3(position.x, 1, position.y), Vector3.down);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            return hit.transform.GetComponent<Square>();
+            Square square = hit.transform.GetComponent<Square>();
+            if (square != null && highlightedSquares.Contains(square))
+            {
+                Vector2 squareCoordinates = new Vector2(square.transform.position.x, square.transform.position.z);
+                selectedPiece.Move(squareCoordinates);
+                UnhighlightLegalMoves();
+                selectedPiece = null;
+            }
         }
-        return null;
     }
 }
