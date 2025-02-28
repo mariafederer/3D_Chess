@@ -12,6 +12,7 @@ public class Board : MonoBehaviour
     void Start()
     {
         logicManager = Object.FindFirstObjectByType<LogicManager>();
+        logicManager.Initialize();
         GenerateBoard();
         PlaceStartingPosition();
     }

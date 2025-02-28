@@ -20,6 +20,7 @@ public class LogicManager : MonoBehaviour
     public void EndTurn()
     {
         isWhiteTurn = !isWhiteTurn;
+        //Debug.Log(isWhiteTurn ? "White's turn" : "Black's turn");
     }
 
     public void UpdateCheckMap()

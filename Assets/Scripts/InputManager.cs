@@ -30,15 +30,18 @@ public class InputManager : MonoBehaviour
             Piece piece = hit.transform.GetComponent<Piece>();
             if (piece != null)
             {
-                if (selectedPiece == piece)
+                if ((piece.IsWhite && logicManager.isWhiteTurn) || (!piece.IsWhite && !logicManager.isWhiteTurn))
                 {
-                    UnhighlightLegalMoves();
-                    selectedPiece = null;
-                }
-                else
-                {
-                    selectedPiece = piece;
-                    HighlightLegalMoves(selectedPiece.GetLegalMoves());
+                    if (selectedPiece == piece)
+                    {
+                        UnhighlightLegalMoves();
+                        selectedPiece = null;
+                    }
+                    else
+                    {
+                        selectedPiece = piece;
+                        HighlightLegalMoves(selectedPiece.GetLegalMoves());
+                    }
                 }
             }
             else
@@ -50,15 +53,18 @@ public class InputManager : MonoBehaviour
                     Piece pieceOnSquare = logicManager.boardMap[(int)squareCoordinates.x, (int)squareCoordinates.y];
                     if (pieceOnSquare != null)
                     {
-                        if (selectedPiece == pieceOnSquare)
+                        if ((pieceOnSquare.IsWhite && logicManager.isWhiteTurn) || (!pieceOnSquare.IsWhite && !logicManager.isWhiteTurn))
                         {
-                            UnhighlightLegalMoves();
-                            selectedPiece = null;
-                        }
-                        else
-                        {
-                            selectedPiece = pieceOnSquare;
-                            HighlightLegalMoves(selectedPiece.GetLegalMoves());
+                            if (selectedPiece == pieceOnSquare)
+                            {
+                                UnhighlightLegalMoves();
+                                selectedPiece = null;
+                            }
+                            else
+                            {
+                                selectedPiece = pieceOnSquare;
+                                HighlightLegalMoves(selectedPiece.GetLegalMoves());
+                            }
                         }
                     }
                 }
@@ -83,7 +89,7 @@ public class InputManager : MonoBehaviour
             }
 
             highlightedSquares.Add(square);
-            Debug.Log("Highlight square at: " + move);
+            //Debug.Log("Highlight square at: " + move);
         }
     }
 
@@ -101,13 +107,29 @@ public class InputManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Square square = hit.transform.GetComponent<Square>();
-            if (square != null && highlightedSquares.Contains(square))
+            Square targetSquare = hit.transform.GetComponent<Square>();
+            Piece targetPiece = hit.transform.GetComponent<Piece>();
+
+            if (targetSquare != null && highlightedSquares.Contains(targetSquare))
             {
-                Vector2 squareCoordinates = new Vector2(square.transform.position.x, square.transform.position.z);
+                Vector2 squareCoordinates = new Vector2(targetSquare.transform.position.x, targetSquare.transform.position.z);
                 selectedPiece.Move(squareCoordinates);
                 UnhighlightLegalMoves();
                 selectedPiece = null;
+                logicManager.EndTurn();
+            }
+            else if (targetPiece != null)
+            {
+                Vector2 targetCoordinates = new Vector2(targetPiece.transform.position.x, targetPiece.transform.position.z);
+                Square targetPieceSquare = logicManager.GetSquareAtPosition(targetCoordinates);
+
+                if (highlightedSquares.Contains(targetPieceSquare))
+                {
+                    selectedPiece.Move(targetCoordinates);
+                    UnhighlightLegalMoves();
+                    selectedPiece = null;
+                    logicManager.EndTurn();
+                }
             }
         }
     }
