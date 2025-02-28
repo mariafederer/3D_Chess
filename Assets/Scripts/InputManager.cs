@@ -116,7 +116,10 @@ public class InputManager : MonoBehaviour
                 selectedPiece.Move(squareCoordinates);
                 UnhighlightLegalMoves();
                 selectedPiece = null;
+                logicManager.UpdateCheckMap();
+                logicManager.CheckKingStatus();
                 logicManager.EndTurn();
+
             }
             else if (targetPiece != null)
             {
@@ -128,7 +131,10 @@ public class InputManager : MonoBehaviour
                     selectedPiece.Move(targetCoordinates);
                     UnhighlightLegalMoves();
                     selectedPiece = null;
+                    logicManager.UpdateCheckMap();
+                    logicManager.CheckKingStatus();
                     logicManager.EndTurn();
+
                 }
             }
         }

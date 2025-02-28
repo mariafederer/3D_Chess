@@ -5,8 +5,8 @@ public class LogicManager : MonoBehaviour
 {
     public Piece[,] boardMap = new Piece[8,8];
     public Square[,] squares = new Square[8, 8];
-    public bool[,] whiteCheckMap = new bool[8,8];
-    public bool[,] blackCheckMap = new bool[8, 8];
+    public bool[,] whiteCheckMap = new bool[8,8]; //potencjalne szachy dla czarnego krola
+    public bool[,] blackCheckMap = new bool[8, 8]; //potencjlane szachy dla bialego krola
     public bool isWhiteTurn;
     public bool isCheck;
     public List<Piece> piecesOnBoard;
@@ -22,18 +22,18 @@ public class LogicManager : MonoBehaviour
         isWhiteTurn = !isWhiteTurn;
         //Debug.Log(isWhiteTurn ? "White's turn" : "Black's turn");
     }
-
     public void UpdateCheckMap()
     {
         ResetCheckMap();
+        UpdatePiecesOnBoard();
 
         foreach (Piece piece in piecesOnBoard)
         {
             if (piece != null)
             {
-                var attackedFields = piece.GetAttackedFields();
+                List<Vector2> attackedFields = piece.GetAttackedFields();
 
-                foreach (var field in attackedFields)
+                foreach (Vector2 field in attackedFields)
                 {
                     if (piece.IsWhite)
                     {
@@ -67,6 +67,60 @@ public class LogicManager : MonoBehaviour
             return null;
         }
         return squares[(int)position.x, (int)position.y];
+    }
+    public void CheckKingStatus()
+    {
+        King king = null;
+
+        for (int x = 0; x < boardMap.GetLength(0); x++)
+        {
+            for (int y = 0; y < boardMap.GetLength(1); y++)
+            {
+                Piece piece = boardMap[x, y];
+                if (piece is King && piece.IsWhite != isWhiteTurn)
+                {
+                    king = (King)piece;
+                    break;
+                }
+            }
+            if (king != null)
+            {
+                break;
+            }
+        }
+
+        if (king != null)
+        {
+            Debug.Log("Checking if king is in check...");
+            if (king.CheckForChecks())
+            {
+                Debug.Log("King is in check after the move!");
+            }
+            else
+            {
+                Debug.Log("King is not in check after the move.");
+            }
+        }
+        else
+        {
+            Debug.LogError("King not found on the board.");
+        }
+    }
+
+    private void UpdatePiecesOnBoard()
+    {
+        piecesOnBoard.Clear();
+        for (int x = 0; x < boardMap.GetLength(0); x++)
+        {
+            for (int y = 0; y < boardMap.GetLength(1); y++)
+            {
+                Piece piece = boardMap[x, y];
+                if (piece != null)
+                {
+                    piecesOnBoard.Add(piece);
+                }
+            }
+        }
     }
 
 }

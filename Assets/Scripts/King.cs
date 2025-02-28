@@ -3,6 +3,15 @@ using UnityEngine;
 
 public class King : Piece
 {
+    public bool CheckForChecks()
+    {
+        Vector2 currentCoordinates = GetCoordinates();
+        bool[,] checkMap = IsWhite ? logicManager.blackCheckMap : logicManager.whiteCheckMap;
+
+        bool isInCheck = checkMap[(int)currentCoordinates.x, (int)currentCoordinates.y];
+        Debug.Log($"Checking position ({currentCoordinates.x}, {currentCoordinates.y}) for checks: {isInCheck}");
+        return isInCheck;
+    }
     public override List<Vector2> GetLegalMoves()
     {
         List<Vector2> legalMoves = new List<Vector2>();
@@ -55,4 +64,6 @@ public class King : Piece
 
         return attackedFields;
     }
+
+
 }
