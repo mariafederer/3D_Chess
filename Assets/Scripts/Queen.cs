@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Queen : Piece
 {
-    public override List<Vector2> GetLegalMoves()
+    protected override List<Vector2> GetPotentialMoves()
     {
         List<Vector2> legalMoves = new List<Vector2>();
         int[] directionsX = { 1, -1, 0, 0, 1, -1, 1, -1 };

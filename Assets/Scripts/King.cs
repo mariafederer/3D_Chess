@@ -9,10 +9,10 @@ public class King : Piece
         bool[,] checkMap = IsWhite ? logicManager.blackCheckMap : logicManager.whiteCheckMap;
 
         bool isInCheck = checkMap[(int)currentCoordinates.x, (int)currentCoordinates.y];
-        Debug.Log($"Checking position ({currentCoordinates.x}, {currentCoordinates.y}) for checks: {isInCheck}");
+        //Debug.Log($"Checking position ({currentCoordinates.x}, {currentCoordinates.y}) for checks: {isInCheck}");
         return isInCheck;
     }
-    public override List<Vector2> GetLegalMoves()
+    protected override List<Vector2> GetPotentialMoves()
     {
         List<Vector2> legalMoves = new List<Vector2>();
         int[] directionsX = { 1, -1, 0, 0, 1, -1, 1, -1 };

@@ -117,7 +117,6 @@ public class InputManager : MonoBehaviour
                 UnhighlightLegalMoves();
                 selectedPiece = null;
                 logicManager.UpdateCheckMap();
-                logicManager.CheckKingStatus();
                 logicManager.EndTurn();
 
             }
@@ -132,7 +131,6 @@ public class InputManager : MonoBehaviour
                     UnhighlightLegalMoves();
                     selectedPiece = null;
                     logicManager.UpdateCheckMap();
-                    logicManager.CheckKingStatus();
                     logicManager.EndTurn();
 
                 }

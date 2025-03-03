@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Pawn : Piece
 {
-    public override List<Vector2> GetLegalMoves()
+    protected override List<Vector2> GetPotentialMoves()
     {
         List<Vector2> legalMoves = new List<Vector2>();
         Vector2 currentCoordinates = GetCoordinates();

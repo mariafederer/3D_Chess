@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Bishop : Piece
 {
-    public override List<Vector2> GetLegalMoves()
+    protected override List<Vector2> GetPotentialMoves()
     {
         List<Vector2> legalMoves = new List<Vector2>();
         int[] directionsX = { 1, 1, -1, -1 };

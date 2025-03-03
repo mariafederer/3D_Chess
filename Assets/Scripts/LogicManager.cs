@@ -8,13 +8,11 @@ public class LogicManager : MonoBehaviour
     public bool[,] whiteCheckMap = new bool[8,8]; //potencjalne szachy dla czarnego krola
     public bool[,] blackCheckMap = new bool[8, 8]; //potencjlane szachy dla bialego krola
     public bool isWhiteTurn;
-    public bool isCheck;
     public List<Piece> piecesOnBoard;
 
     public void Initialize()
     {
         isWhiteTurn = true;
-        isCheck = false;
     }
 
     public void EndTurn()
@@ -68,7 +66,7 @@ public class LogicManager : MonoBehaviour
         }
         return squares[(int)position.x, (int)position.y];
     }
-    public void CheckKingStatus()
+    public bool CheckKingStatus()
     {
         King king = null;
 
@@ -77,7 +75,7 @@ public class LogicManager : MonoBehaviour
             for (int y = 0; y < boardMap.GetLength(1); y++)
             {
                 Piece piece = boardMap[x, y];
-                if (piece is King && piece.IsWhite != isWhiteTurn)
+                if (piece is King && piece.IsWhite == isWhiteTurn)
                 {
                     king = (King)piece;
                     break;
@@ -91,19 +89,20 @@ public class LogicManager : MonoBehaviour
 
         if (king != null)
         {
-            Debug.Log("Checking if king is in check...");
+            //Debug.Log("Checking if king is in check...");
             if (king.CheckForChecks())
             {
-                Debug.Log("King is in check after the move!");
+                //Debug.Log("King is in check after the move!");
+                return true;
             }
             else
             {
-                Debug.Log("King is not in check after the move.");
+                //Debug.Log("King is not in check after the move.");
+                return false;
             }
-        }
-        else
+        } else
         {
-            Debug.LogError("King not found on the board.");
+            return false;
         }
     }
 
