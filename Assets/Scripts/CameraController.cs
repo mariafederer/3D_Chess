@@ -10,6 +10,17 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        WhitePerspective();
+    }
+
+    public void BlackPerspective()
+    {
+        transform.position = new Vector3(xPosition, height, 9f);
+        transform.rotation = Quaternion.Euler(angle, 180f, 0f);
+    }
+
+    public void WhitePerspective()
+    {
         Vector3 boardCenter = new Vector3(boardTransform.position.x + xPosition,
                                           boardTransform.position.y,
                                           boardTransform.position.z + yPosition);

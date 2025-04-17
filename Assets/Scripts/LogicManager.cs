@@ -9,7 +9,15 @@ public class LogicManager : MonoBehaviour
     public bool[,] blackCheckMap = new bool[8, 8]; //potencjlane szachy dla bialego krola
     public bool isWhiteTurn;
     public List<Piece> piecesOnBoard;
+    private CameraController cameraController;
+    private GameOverUI gameOverUI;
 
+
+    public void Start()
+    {
+        cameraController = FindFirstObjectByType<CameraController>();
+        gameOverUI = FindFirstObjectByType<GameOverUI>();
+    }
     public void Initialize()
     {
         isWhiteTurn = true;
@@ -19,6 +27,19 @@ public class LogicManager : MonoBehaviour
     {
         isWhiteTurn = !isWhiteTurn;
         //Debug.Log(isWhiteTurn ? "White's turn" : "Black's turn");
+        CheckGameOver();
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
+        if (isWhiteTurn)
+        {
+            cameraController.WhitePerspective();
+        } else
+        {
+            cameraController.BlackPerspective();
+        }
     }
     public void UpdateCheckMap()
     {
@@ -118,6 +139,88 @@ public class LogicManager : MonoBehaviour
                 {
                     piecesOnBoard.Add(piece);
                 }
+            }
+        }
+    }
+
+    public void CheckGameOver()
+    {
+        if (CheckKingStatus())
+        {
+            UpdatePiecesOnBoard();
+            List<Piece> piecesCopy = new List<Piece>(piecesOnBoard);
+
+            bool hasValidMoves = false;
+            foreach (Piece piece in piecesCopy)
+            {
+                if (piece != null && piece.IsWhite == isWhiteTurn)
+                {
+                    if (piece.GetLegalMoves().Count > 0)
+                    {
+                        hasValidMoves = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasValidMoves)
+            {
+                string result = isWhiteTurn ? "Black wins" : "White wins";
+                gameOverUI.ShowGameOver(result);
+                Time.timeScale = 0;
+            }
+        }
+        else
+        {
+            UpdatePiecesOnBoard();
+            List<Piece> piecesCopy = new List<Piece>(piecesOnBoard);
+
+            int kingCount = 0;
+            int knightCount = 0;
+            int bishopCount = 0;
+
+            foreach (Piece piece in piecesCopy)
+            {
+                if (piece is King)
+                {
+                    kingCount++;
+                }
+                else if (piece is Knight)
+                {
+                    knightCount++;
+                }
+                else if (piece is Bishop)
+                {
+                    bishopCount++;
+                }
+            }
+
+            if (kingCount == 2 && (knightCount == 0 && bishopCount == 0 || knightCount == 1 && bishopCount == 0 || knightCount == 0 && bishopCount == 1))
+            {
+                string result = "Draw";
+                gameOverUI.ShowGameOver(result);
+                Time.timeScale = 0;
+                return;
+            }
+
+            bool hasValidMoves = false;
+            foreach (Piece piece in piecesCopy)
+            {
+                if (piece != null && piece.IsWhite == isWhiteTurn)
+                {
+                    if (piece.GetLegalMoves().Count > 0)
+                    {
+                        hasValidMoves = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasValidMoves)
+            {
+                string result = "Draw";
+                gameOverUI.ShowGameOver(result);
+                Time.timeScale = 0;
             }
         }
     }
