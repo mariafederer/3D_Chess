@@ -1,10 +1,10 @@
 using UnityEngine;
-using TMPro; // Add this namespace for TextMeshPro
+using TMPro;
 
 public class GameOverUI : MonoBehaviour
 {
     public GameObject panel;
-    public TextMeshProUGUI winnerText; // Change the type to TextMeshProUGUI
+    public TextMeshProUGUI winnerText;
 
     public void ShowGameOver(string result)
     {

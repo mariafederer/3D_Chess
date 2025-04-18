@@ -16,6 +16,8 @@ public class LogicManager : MonoBehaviour
     public Piece lastMovedPiece;
     public Vector2 lastMovedPieceStartPosition;
     public Vector2 lastMovedPieceEndPosition;
+    public AudioSource moveSound;
+    public AudioSource captureSound;
 
 
     public void Start()
@@ -42,7 +44,8 @@ public class LogicManager : MonoBehaviour
         if (isWhiteTurn)
         {
             cameraController.WhitePerspective();
-        } else
+        }
+        else
         {
             cameraController.BlackPerspective();
         }

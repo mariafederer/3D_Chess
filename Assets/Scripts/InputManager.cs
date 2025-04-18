@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class InputManager : MonoBehaviour
     private Piece selectedPiece;
     private LogicManager logicManager;
     private List<Square> highlightedSquares = new List<Square>();
+    private Square currentlyHighlightedSquare;
 
     void Start()
     {
@@ -39,12 +41,14 @@ public class InputManager : MonoBehaviour
                 {
                     if (selectedPiece == piece)
                     {
+                        UnhighlightSelectedSquare();
                         UnhighlightLegalMoves();
                         selectedPiece = null;
                     }
                     else
                     {
                         selectedPiece = piece;
+                        HighlightSelectedSquare();
                         HighlightLegalMoves(selectedPiece.GetLegalMoves());
                     }
                 }
@@ -62,18 +66,40 @@ public class InputManager : MonoBehaviour
                         {
                             if (selectedPiece == pieceOnSquare)
                             {
+                                UnhighlightSelectedSquare();
                                 UnhighlightLegalMoves();
                                 selectedPiece = null;
                             }
                             else
                             {
                                 selectedPiece = pieceOnSquare;
+                                HighlightSelectedSquare();
                                 HighlightLegalMoves(selectedPiece.GetLegalMoves());
                             }
                         }
                     }
                 }
             }
+        }
+    }
+    void UnhighlightSelectedSquare()
+    {
+        if (currentlyHighlightedSquare != null)
+        {
+            currentlyHighlightedSquare.Unhighlight();
+            currentlyHighlightedSquare = null;
+        }
+    }
+    void HighlightSelectedSquare()
+    {
+        UnhighlightSelectedSquare();
+
+        Vector2 pieceCoordinates = selectedPiece.GetCoordinates();
+        currentlyHighlightedSquare = logicManager.GetSquareAtPosition(pieceCoordinates);
+
+        if (currentlyHighlightedSquare != null)
+        {
+            currentlyHighlightedSquare.Highlight(new Color(0f, 0.6f, 0.6f));
         }
     }
 
@@ -119,12 +145,32 @@ public class InputManager : MonoBehaviour
             {
                 Vector2 squareCoordinates = new Vector2(targetSquare.transform.position.x, targetSquare.transform.position.z);
                 Vector2 startPosition = selectedPiece.GetCoordinates();
+                bool isCapture = logicManager.boardMap[(int)squareCoordinates.x, (int)squareCoordinates.y] != null;
+                bool isEnPassant = selectedPiece is Pawn &&
+                   logicManager.boardMap[(int)squareCoordinates.x, (int)squareCoordinates.y] == null &&
+                   Mathf.Abs(squareCoordinates.x - startPosition.x) == 1 &&
+                   Mathf.Abs(squareCoordinates.y - startPosition.y) == 1;
+
                 selectedPiece.Move(squareCoordinates);
                 logicManager.lastMovedPiece = selectedPiece;
                 logicManager.lastMovedPieceStartPosition = startPosition;
                 logicManager.lastMovedPieceEndPosition = selectedPiece.GetCoordinates();
                 UnhighlightLegalMoves();
+                UnhighlightSelectedSquare();
                 selectedPiece = null;
+
+                if (isEnPassant && logicManager.captureSound != null)
+                {
+                    logicManager.captureSound.Play();
+                }
+                else if (!isCapture && logicManager.moveSound != null)
+                {
+                    logicManager.moveSound.Play();
+                }
+                else if (isCapture && logicManager.captureSound != null)
+                {
+                    logicManager.captureSound.Play();
+                }
 
                 if (!logicManager.isPromotionActive)
                 {
@@ -141,12 +187,24 @@ public class InputManager : MonoBehaviour
                 if (highlightedSquares.Contains(targetPieceSquare))
                 {
                     Vector2 startPosition = selectedPiece.GetCoordinates();
+                    bool isCapture = logicManager.boardMap[(int)targetCoordinates.x, (int)targetCoordinates.y] != null;
+
                     selectedPiece.Move(targetCoordinates);
                     logicManager.lastMovedPiece = selectedPiece;
                     logicManager.lastMovedPieceStartPosition = startPosition;
                     logicManager.lastMovedPieceEndPosition = selectedPiece.GetCoordinates();
                     UnhighlightLegalMoves();
+                    UnhighlightSelectedSquare();
                     selectedPiece = null;
+
+                    if (!isCapture && logicManager.moveSound != null)
+                    {
+                        logicManager.moveSound.Play();
+                    }
+                    else if (isCapture && logicManager.captureSound != null)
+                    {
+                        logicManager.captureSound.Play();
+                    }
 
                     if (!logicManager.isPromotionActive)
                     {
