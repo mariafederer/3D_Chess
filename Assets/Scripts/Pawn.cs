@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class Pawn : Piece
 {
+    public override void Move(Vector2 newPosition)
+    {
+        base.Move(newPosition);
+        if ((IsWhite && newPosition.y == 7) || (!IsWhite && newPosition.y == 0))
+        {
+            logicManager.HandlePromotion(this);
+        }
+    }
     protected override List<Vector2> GetPotentialMoves()
     {
         List<Vector2> legalMoves = new List<Vector2>();

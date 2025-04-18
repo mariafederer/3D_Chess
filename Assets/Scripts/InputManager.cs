@@ -14,6 +14,11 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
+        if (logicManager.isPromotionActive)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             SelectPiece();
@@ -116,8 +121,11 @@ public class InputManager : MonoBehaviour
                 selectedPiece.Move(squareCoordinates);
                 UnhighlightLegalMoves();
                 selectedPiece = null;
-                logicManager.UpdateCheckMap();
-                logicManager.EndTurn();
+                if (!logicManager.isPromotionActive)
+                {
+                    logicManager.UpdateCheckMap();
+                    logicManager.EndTurn();
+                }
 
             }
             else if (targetPiece != null)
@@ -130,8 +138,11 @@ public class InputManager : MonoBehaviour
                     selectedPiece.Move(targetCoordinates);
                     UnhighlightLegalMoves();
                     selectedPiece = null;
-                    logicManager.UpdateCheckMap();
-                    logicManager.EndTurn();
+                    if (!logicManager.isPromotionActive)
+                    {
+                        logicManager.UpdateCheckMap();
+                        logicManager.EndTurn();
+                    }
 
                 }
             }

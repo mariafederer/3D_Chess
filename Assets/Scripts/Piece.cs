@@ -73,7 +73,7 @@ public abstract class Piece : MonoBehaviour
         logicManager.boardMap[(int)coordinates.x, (int)coordinates.y] = this;
     }
 
-    public void Move(Vector2 newPosition)
+    public virtual void Move(Vector2 newPosition)
     {
         Vector2 currentCoordinates = GetCoordinates();
         logicManager.boardMap[(int)currentCoordinates.x, (int)currentCoordinates.y] = null;

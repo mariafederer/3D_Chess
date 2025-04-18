@@ -11,12 +11,15 @@ public class LogicManager : MonoBehaviour
     public List<Piece> piecesOnBoard;
     private CameraController cameraController;
     private GameOverUI gameOverUI;
+    private PromotionUI promotionUI;
+    public bool isPromotionActive = false;
 
 
     public void Start()
     {
         cameraController = FindFirstObjectByType<CameraController>();
         gameOverUI = FindFirstObjectByType<GameOverUI>();
+        promotionUI = FindFirstObjectByType<PromotionUI>();
     }
     public void Initialize()
     {
@@ -224,5 +227,9 @@ public class LogicManager : MonoBehaviour
             }
         }
     }
-
+    public void HandlePromotion(Pawn pawn)
+    {
+        isPromotionActive = true;
+        promotionUI.Show(pawn);
+    }
 }

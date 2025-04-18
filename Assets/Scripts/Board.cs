@@ -72,7 +72,7 @@ public class Board : MonoBehaviour
         InstantiatePiece(PiecePrefabs[11], new Vector3(4, pieceHeight, 7), PieceMaterials[1], "King", false);
     }
 
-    private void InstantiatePiece(GameObject piecePrefab, Vector3 position, Material material, string pieceType, bool isWhite)
+    public void InstantiatePiece(GameObject piecePrefab, Vector3 position, Material material, string pieceType, bool isWhite)
     {
         GameObject pieceObject = Instantiate(piecePrefab, position, Quaternion.identity);
         pieceObject.transform.parent = this.transform;
