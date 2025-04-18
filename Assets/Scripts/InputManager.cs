@@ -118,9 +118,14 @@ public class InputManager : MonoBehaviour
             if (targetSquare != null && highlightedSquares.Contains(targetSquare))
             {
                 Vector2 squareCoordinates = new Vector2(targetSquare.transform.position.x, targetSquare.transform.position.z);
+                Vector2 startPosition = selectedPiece.GetCoordinates();
                 selectedPiece.Move(squareCoordinates);
+                logicManager.lastMovedPiece = selectedPiece;
+                logicManager.lastMovedPieceStartPosition = startPosition;
+                logicManager.lastMovedPieceEndPosition = selectedPiece.GetCoordinates();
                 UnhighlightLegalMoves();
                 selectedPiece = null;
+
                 if (!logicManager.isPromotionActive)
                 {
                     logicManager.UpdateCheckMap();
@@ -135,9 +140,14 @@ public class InputManager : MonoBehaviour
 
                 if (highlightedSquares.Contains(targetPieceSquare))
                 {
+                    Vector2 startPosition = selectedPiece.GetCoordinates();
                     selectedPiece.Move(targetCoordinates);
+                    logicManager.lastMovedPiece = selectedPiece;
+                    logicManager.lastMovedPieceStartPosition = startPosition;
+                    logicManager.lastMovedPieceEndPosition = selectedPiece.GetCoordinates();
                     UnhighlightLegalMoves();
                     selectedPiece = null;
+
                     if (!logicManager.isPromotionActive)
                     {
                         logicManager.UpdateCheckMap();

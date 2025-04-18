@@ -13,6 +13,9 @@ public class LogicManager : MonoBehaviour
     private GameOverUI gameOverUI;
     private PromotionUI promotionUI;
     public bool isPromotionActive = false;
+    public Piece lastMovedPiece;
+    public Vector2 lastMovedPieceStartPosition;
+    public Vector2 lastMovedPieceEndPosition;
 
 
     public void Start()
