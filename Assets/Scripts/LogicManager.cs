@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LogicManager : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class LogicManager : MonoBehaviour
     public Vector2 lastMovedPieceEndPosition;
     public AudioSource moveSound;
     public AudioSource captureSound;
+    public bool isCameraRotationEnabled = true;
+    public bool isSoundEnabled = true;
+    public float soundVolume = 0.5f;
 
 
     public void Start()
@@ -41,13 +45,16 @@ public class LogicManager : MonoBehaviour
             return;
         }
 
-        if (isWhiteTurn)
+        if (isCameraRotationEnabled)
         {
-            cameraController.WhitePerspective();
-        }
-        else
-        {
-            cameraController.BlackPerspective();
+            if (isWhiteTurn)
+            {
+                cameraController.WhitePerspective();
+            }
+            else
+            {
+                cameraController.BlackPerspective();
+            }
         }
     }
     public void UpdateCheckMap()
@@ -237,5 +244,36 @@ public class LogicManager : MonoBehaviour
     {
         isPromotionActive = true;
         promotionUI.Show(pawn);
+    }
+    public void ToggleCameraRotation(bool isEnabled)
+    {
+        isCameraRotationEnabled = isEnabled;
+        if (isCameraRotationEnabled)
+        {
+            if (cameraController != null)
+            {
+                if (isWhiteTurn)
+                {
+                    cameraController.WhitePerspective();
+                }
+                else
+                {
+                    cameraController.BlackPerspective();
+                }
+            }
+        }
+    }
+    public void ToggleSound(bool isEnabled)
+    {
+        isSoundEnabled = isEnabled;
+
+        moveSound.mute = !isSoundEnabled;
+        captureSound.mute = !isSoundEnabled;
+    }
+    public void SetSoundVolume(float volume)
+    {
+        soundVolume = volume;
+        moveSound.volume = soundVolume;
+        captureSound.volume = soundVolume;
     }
 }

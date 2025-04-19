@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
@@ -8,30 +8,35 @@ public class InputManager : MonoBehaviour
     private LogicManager logicManager;
     private List<Square> highlightedSquares = new List<Square>();
     private Square currentlyHighlightedSquare;
+    private InputAction clickAction;
 
     void Start()
     {
         logicManager = Object.FindFirstObjectByType<LogicManager>();
+        clickAction = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton");
+        clickAction.performed += ctx => OnMouseClick();
+        clickAction.Enable();
     }
 
-    void Update()
+    void OnDestroy()
+    {
+        clickAction.Disable();
+    }
+
+    private void OnMouseClick()
     {
         if (logicManager.isPromotionActive)
         {
             return;
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            SelectPiece();
-            MovePiece();
-        }
-
+        SelectPiece();
+        MovePiece();
     }
 
     void SelectPiece()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Piece piece = hit.transform.GetComponent<Piece>();
@@ -82,6 +87,7 @@ public class InputManager : MonoBehaviour
             }
         }
     }
+
     void UnhighlightSelectedSquare()
     {
         if (currentlyHighlightedSquare != null)
@@ -90,6 +96,7 @@ public class InputManager : MonoBehaviour
             currentlyHighlightedSquare = null;
         }
     }
+
     void HighlightSelectedSquare()
     {
         UnhighlightSelectedSquare();
@@ -120,7 +127,6 @@ public class InputManager : MonoBehaviour
             }
 
             highlightedSquares.Add(square);
-            //Debug.Log("Highlight square at: " + move);
         }
     }
 
@@ -135,7 +141,7 @@ public class InputManager : MonoBehaviour
 
     void MovePiece()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Square targetSquare = hit.transform.GetComponent<Square>();

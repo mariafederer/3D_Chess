@@ -5,6 +5,16 @@ public class GameOverUI : MonoBehaviour
 {
     public GameObject panel;
     public TextMeshProUGUI winnerText;
+    private LogicManager logicManager;
+
+    public void Start()
+    {
+        logicManager = FindFirstObjectByType<LogicManager>();
+        if (panel != null)
+        {
+            panel.SetActive(false);
+        }
+    }
 
     public void ShowGameOver(string result)
     {
@@ -21,5 +31,6 @@ public class GameOverUI : MonoBehaviour
     {
         Time.timeScale = 1;
         UnityEngine.SceneManagement.SceneManager.LoadScene("ChessScene");
+        logicManager.Initialize();
     }
 }
