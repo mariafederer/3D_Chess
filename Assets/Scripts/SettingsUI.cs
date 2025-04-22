@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,16 +65,23 @@ public class SettingsUI : MonoBehaviour
         availableResolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 
+        var uniqueResolutions = availableResolutions
+            .GroupBy(res => new { res.width, res.height })
+            .Select(group => group.OrderByDescending(res => res.refreshRateRatio.value).First())
+            .ToList();
+
         var options = new System.Collections.Generic.List<string>();
         int currentResolutionIndex = 0;
 
-        for (int i = 0; i < availableResolutions.Length; i++)
+        for (int i = 0; i < uniqueResolutions.Count; i++)
         {
-            string resolutionOption = $"{availableResolutions[i].width}x{availableResolutions[i].height}";
+            var resolution = uniqueResolutions[i];
+            string resolutionOption = $"{resolution.width}x{resolution.height}";
             options.Add(resolutionOption);
 
-            if (availableResolutions[i].width == Screen.currentResolution.width &&
-                availableResolutions[i].height == Screen.currentResolution.height)
+            if (resolution.width == Screen.currentResolution.width &&
+                resolution.height == Screen.currentResolution.height &&
+                resolution.refreshRateRatio.value == Screen.currentResolution.refreshRateRatio.value)
             {
                 currentResolutionIndex = i;
             }
@@ -83,6 +91,8 @@ public class SettingsUI : MonoBehaviour
         int savedResolutionIndex = PlayerPrefs.GetInt("ResolutionIndex", currentResolutionIndex);
         resolutionDropdown.value = savedResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+
+        availableResolutions = uniqueResolutions.ToArray();
     }
 
     private void ChangeResolution(int index)

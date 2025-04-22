@@ -1,9 +1,4 @@
-# Ignorowanie folderów generowanych przez Visual Studio
 .vs/
-.vscode/
-.idea/
-
-# Ignorowanie folderów generowanych przez Unity
 [Ll]ibrary/
 [Tt]emp/
 Obj/
@@ -12,3 +7,22 @@ Builds/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Ll]ogs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pidb.meta
+*.pdb
+*.mdb
+.vscode/
+.idea/
+*.sln.iml
+.DS_Store
+Thumbs.db
+
