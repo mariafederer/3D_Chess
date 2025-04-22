@@ -10,6 +10,11 @@ You can download the latest stable build here:
 
 ➡[Download 3D_Chess v1.0 (Windows .zip)](https://github.com/mzabron/3D_Chess/releases/download/v1.0/3D_Chess.zip)
 
+How to Play:
+Download and unpack the archive.
+Run '3D_Chess.exe' directly from the extracted folder.
+Do not move the '.exe' file out of its folder, as it relies on accompanying data files.
+
 ---
 
 Rule Support
